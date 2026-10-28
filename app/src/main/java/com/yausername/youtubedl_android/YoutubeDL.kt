@@ -92,7 +92,7 @@ object YoutubeDL {
     }
 
     private fun updatePython(appContext: Context, version: String) {
-        update(appContext, pythonLibVersion, version)
+        SharedPrefsHelper[appContext, pythonLibVersion] = version
     }
 
     private fun assertInit() {
@@ -267,19 +267,15 @@ object YoutubeDL {
         updateChannel: UpdateChannel = UpdateChannel.STABLE
     ): UpdateStatus? {
         assertInit()
-        return try {
-            YoutubeDLUpdater.update(appContext, updateChannel)
-        } catch (e: IOException) {
-            throw YoutubeDLException("failed to update youtube-dl", e)
-        }
+        return null
     }
 
     fun version(appContext: Context?): String? {
-        return YoutubeDLUpdater.version(appContext)
+        return SharedPrefsHelper[appContext, pythonLibVersion]
     }
 
     fun versionName(appContext: Context?): String? {
-        return YoutubeDLUpdater.versionName(appContext)
+        return SharedPrefsHelper[appContext, pythonLibVersion]
     }
 
     enum class UpdateStatus {

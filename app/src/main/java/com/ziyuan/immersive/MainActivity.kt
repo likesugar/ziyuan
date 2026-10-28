@@ -2,6 +2,7 @@
 package com.ziyuan.immersive
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.WindowManager
 import androidx.activity.ComponentActivity

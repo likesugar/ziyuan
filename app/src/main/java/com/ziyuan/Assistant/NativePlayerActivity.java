@@ -1,6 +1,6 @@
 package com.ziyuan.Assistant;
 
-import com.ziyuan.immersive.R;
+import com.ziyuan.Assistant.R;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Notification;

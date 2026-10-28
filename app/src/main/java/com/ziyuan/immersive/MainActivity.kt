@@ -175,7 +175,12 @@ fun HomePage(tc: Tc) {
         FeatCard("📕", Color(0xFFE63946), "小红书", "图文视频提取"),
         FeatCard("⚡", Color(0xFF4353C4), "创建快捷键", "任意快捷方式"),
         FeatCard("💬", Color(0xFFB04FD8), "聊天室", "WebChat 聊天"),
-        FeatCard("🥁", Color(0xFF14A08A), "节拍器&天气", "节拍+天气卡片")
+        FeatCard("🥁", Color(0xFF14A08A), "节拍器&天气", "节拍+天气卡片"),
+        FeatCard("💊", Color(0xFFFF5A5F), "用药提醒", "按时吃药提醒"),
+        FeatCard("👆", Color(0xFF2D9CDB), "点击器", "自动连点工具"),
+        FeatCard("🎡", Color(0xFFEB2D7A), "娱乐", "老虎机转盘等"),
+        FeatCard("🌍", Color(0xFF27AE60), "网页转应用", "H5 打包成应用"),
+        FeatCard("›", Color(0xFFF2994A), "HTML5 编辑器", "WebCat 编辑器")
     )
     Column(modifier = Modifier.fillMaxSize()) {
         Spacer(modifier = Modifier.height(40.dp))

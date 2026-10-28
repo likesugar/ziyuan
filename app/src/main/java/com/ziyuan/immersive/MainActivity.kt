@@ -53,6 +53,24 @@ class MainActivity : ComponentActivity() {
             WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
         setContent { ImmersiveScreen() }
     }
+
+    override fun onWindowFocusChanged(hasFocus: Boolean) {
+        super.onWindowFocusChanged(hasFocus)
+        if (hasFocus) hideSystemBars()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        hideSystemBars()
+    }
+
+    private fun hideSystemBars() {
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+        val controller = WindowInsetsControllerCompat(window, window.decorView)
+        controller.hide(WindowInsetsCompat.Type.systemBars())
+        controller.systemBarsBehavior =
+            WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+    }
 }
 
 @Composable
@@ -138,8 +156,8 @@ fun CapsuleBar(modifier: Modifier = Modifier) {
             verticalAlignment = Alignment.CenterVertically
         ) {
             CapsuleIcon(Icons.Filled.Home)
-            CapsuleIcon(Icons.Filled.PlayArrow, highlight = true)
             CapsuleIcon(Icons.Filled.Settings)
+            CapsuleIcon(Icons.Filled.PlayArrow, highlight = true)
         }
     }
 }

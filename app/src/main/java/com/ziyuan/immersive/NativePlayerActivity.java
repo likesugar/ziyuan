@@ -100,6 +100,7 @@ public class NativePlayerActivity extends Activity {
         videoView.setUrl(url, douyinHeaders());
         boolean autoPlay = getSharedPreferences("ziyuan", MODE_PRIVATE).getBoolean("auto_play", true);
         if (autoPlay) videoView.start(); else videoView.pause();
+        // 播放完成后留在播放页（不自动退出），由控制层管理
 
     }
 

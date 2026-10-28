@@ -6,8 +6,8 @@ android {
         applicationId = "com.ziyuan.immersive"
         minSdk = 24
         targetSdk = 34
-        versionCode = 19
-        versionName = "1.19"
+        versionCode = 20
+        versionName = "1.20"
     }
     signingConfigs {
         create("release") {
@@ -37,4 +37,5 @@ dependencies {
     implementation("androidx.compose.ui:ui-tooling-preview")
     debugImplementation("androidx.compose.ui:ui-tooling")
     implementation("androidx.compose.material3:material3")
+    implementation("com.google.android.material:material:1.11.0")
 }

@@ -1,13 +1,13 @@
 plugins { id("com.android.application"); id("org.jetbrains.kotlin.android"); id("org.jetbrains.kotlin.plugin.compose") }
 android {
     namespace = "com.ziyuan.immersive"
-    compileSdk = 35
+    compileSdk = 36
     defaultConfig {
         applicationId = "com.ziyuan.immersive"
         minSdk = 24
-        targetSdk = 35
-        versionCode = 24
-        versionName = "1.24"
+        targetSdk = 36
+        versionCode = 25
+        versionName = "1.25"
     }
     signingConfigs {
         create("release") {

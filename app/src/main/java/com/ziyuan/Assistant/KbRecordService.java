@@ -1,6 +1,6 @@
 package com.ziyuan.Assistant;
 
-import com.ziyuan.immersive.R;
+import com.ziyuan.Assistant.R;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;

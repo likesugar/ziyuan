@@ -1,6 +1,6 @@
 package xyz.doikki.videocontroller;
 
-import com.wink.xgjhome.R;
+import com.ziyuan.immersive.R;
 
 import android.content.Context;
 import android.content.pm.ActivityInfo;

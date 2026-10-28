@@ -10,7 +10,7 @@ import android.view.animation.Animation;
 import android.widget.LinearLayout;
 
 
-import com.wink.xgjhome.R;
+import com.ziyuan.immersive.R;
 import xyz.doikki.videoplayer.controller.IControlComponent;
 import xyz.doikki.videoplayer.controller.ControlWrapper;
 import xyz.doikki.videoplayer.player.VideoView;

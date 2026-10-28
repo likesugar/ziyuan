@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import com.wink.xgjhome.R;
+import com.ziyuan.immersive.R;
 import xyz.doikki.videoplayer.controller.BaseVideoController;
 import xyz.doikki.videoplayer.controller.MediaPlayerControl;
 import xyz.doikki.videoplayer.render.IRenderView;

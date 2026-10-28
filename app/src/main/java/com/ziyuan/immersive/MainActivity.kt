@@ -1,5 +1,5 @@
 @file:OptIn(androidx.compose.foundation.ExperimentalFoundationApi::class)
-package com.ziyuan.immersive
+package com.ziyuan.Assistant
 
 import android.content.Intent
 import android.net.Uri

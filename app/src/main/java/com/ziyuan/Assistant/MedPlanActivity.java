@@ -1,6 +1,6 @@
 package com.ziyuan.Assistant;
 
-import com.ziyuan.immersive.R;
+import com.ziyuan.Assistant.R;
 import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.AlertDialog;

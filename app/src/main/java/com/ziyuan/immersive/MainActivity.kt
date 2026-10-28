@@ -5,6 +5,7 @@ import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -47,6 +48,10 @@ class MainActivity : ComponentActivity() {
         // 沉浸式：内容延伸到系统栏后面，并隐藏状态栏 + 导航栏
         WindowCompat.setDecorFitsSystemWindows(window, false)
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+        // 挖孔屏：内容延伸到挖孔区
+        val lp = window.attributes
+        lp.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
+        window.attributes = lp
         val controller = WindowInsetsControllerCompat(window, window.decorView)
         controller.hide(WindowInsetsCompat.Type.systemBars())
         controller.systemBarsBehavior =
@@ -87,8 +92,8 @@ fun ImmersiveScreen() {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .systemBarsPadding() // 给下滑呼出的临时系统栏留位
         ) {
+            Spacer(modifier = Modifier.height(34.dp)) // 顶到挖孔区，手动留出顶部安全距离
             // 左右卡片
             Row(
                 modifier = Modifier
@@ -144,6 +149,7 @@ fun InfoCard(title: String, body: String, accent: Color, modifier: Modifier = Mo
 
 @Composable
 fun CapsuleBar(modifier: Modifier = Modifier) {
+    val context = androidx.compose.ui.platform.LocalContext.current
     Surface(
         modifier = modifier,
         shape = RoundedCornerShape(percent = 50),
@@ -157,16 +163,25 @@ fun CapsuleBar(modifier: Modifier = Modifier) {
         ) {
             CapsuleIcon(Icons.Filled.Home)
             CapsuleIcon(Icons.Filled.Settings)
-            CapsuleIcon(Icons.Filled.PlayArrow, highlight = true)
+            CapsuleIcon(Icons.Filled.PlayArrow, highlight = true) {
+                context.startActivity(
+                    android.content.Intent(context, NativePlayerActivity::class.java)
+                        .putExtra("url", "https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel.ism/.m3u8")
+                        .putExtra("title", "胶囊播放")
+                )
+            }
         }
     }
 }
 
 @Composable
-fun CapsuleIcon(icon: ImageVector, highlight: Boolean = false) {
+fun CapsuleIcon(icon: ImageVector, highlight: Boolean = false, onClick: () -> Unit = {}) {
     val tint = if (highlight) Color(0xFF4ADE80) else Color.White.copy(alpha = 0.85f)
+    val context = androidx.compose.ui.platform.LocalContext.current
     Box(
-        modifier = Modifier.size(40.dp),
+        modifier = Modifier
+            .size(40.dp)
+            .clickable { onClick() },
         contentAlignment = Alignment.Center
     ) {
         Icon(icon, contentDescription = null, tint = tint)

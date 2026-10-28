@@ -14,5 +14,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".NativePlayerActivity" android:configChanges="orientation|screenSize|keyboardHidden|screenLayout" />
     </application>
 </manifest>

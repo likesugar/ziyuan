@@ -346,5 +346,3 @@ fun CapsuleBubble(icon: ImageVector, selected: Boolean, tint: Color, onClick: ()
         Icon(icon, contentDescription = null, tint = if (selected) tint else Color.White.copy(alpha = 0.75f))
     }
 }
-
-@Composable

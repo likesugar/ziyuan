@@ -34,6 +34,18 @@ import xyz.doikki.videoplayer.util.PlayerUtils;
 
 public class StandardVideoController extends GestureVideoController implements View.OnClickListener {
 
+    private android.widget.ImageView mBackgroundPlayBtn;
+
+    /** 后台播放按钮选中态（Assistant 移植） */
+    public void setBackgroundPlaySelected(boolean selected) {
+        if (mBackgroundPlayBtn != null) mBackgroundPlayBtn.setSelected(selected);
+    }
+
+    public void registerBackgroundPlayButton(android.widget.ImageView btn) {
+        mBackgroundPlayBtn = btn;
+    }
+
+
     protected ImageView mLockButton;
 
     protected ProgressBar mLoadingProgress;

@@ -6,8 +6,8 @@ android {
         applicationId = "com.ziyuan.immersive"
         minSdk = 24
         targetSdk = 36
-        versionCode = 37
-        versionName = "1.37"
+        versionCode = 39
+        versionName = "1.39"
     }
     signingConfigs {
         create("release") {
@@ -30,6 +30,7 @@ android {
 }
 dependencies {
     implementation(files("libs/apksig.jar"))
+    implementation(files("libs/sora-editor-classes.jar"))
     implementation("org.apache.commons:commons-compress:1.26.0")
 
     implementation(files("libs/pinyin4j-2.5.0.jar"))

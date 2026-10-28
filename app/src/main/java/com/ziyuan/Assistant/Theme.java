@@ -1,6 +1,6 @@
 package com.ziyuan.Assistant;
 
-import com.ziyuan.immersive.R;
+import com.ziyuan.Assistant.R;
 import android.content.Context;
 
 /** 全局主题: 首页明暗开关控制所有页面; 深色默认OLED纯黑(省电护眼) */

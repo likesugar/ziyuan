@@ -20,7 +20,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 
-import com.ziyuan.immersive.R;
+import com.ziyuan.Assistant.R;
 import xyz.doikki.videoplayer.controller.ControlWrapper;
 import xyz.doikki.videoplayer.controller.IControlComponent;
 import xyz.doikki.videoplayer.player.VideoView;

@@ -1,4 +1,4 @@
-package com.ziyuan.immersive;
+package com.ziyuan.Assistant;
 
 import android.view.Gravity;
 import android.view.View;

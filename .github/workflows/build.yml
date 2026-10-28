@@ -7,17 +7,16 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-java@v4
+      - uses: actions/checkout@v7
+      - uses: actions/setup-java@v6
         with:
           distribution: temurin
           java-version: '17'
       - name: Build release APK
         run: |
           chmod +x gradlew
-          # 加了 --stacktrace，下次失败会在日志里打印完整报错链，方便定位“包名冲突”的确切位置
           ./gradlew --no-daemon assembleRelease --stacktrace
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: Immersive-v1.39-vc${{ github.run_number }}
           path: app/build/outputs/apk/release/*.apk

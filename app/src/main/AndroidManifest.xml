@@ -3,91 +3,99 @@
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
-    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
-    <uses-permission android:name="android.permission.WAKE_LOCK"/>
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC"/>
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK"/>
-    <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES"/>
-    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
-    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM"/>
-    <uses-permission android:name="android.permission.USE_EXACT_ALARM"/>
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-    <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION"/>
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+<uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
+<uses-permission android:name="android.permission.INTERNET"/>
+<uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+<uses-permission android:name="android.permission.WAKE_LOCK"/>
+<uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC"/>
+<uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK"/>
+<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+<uses-permission android:name="android.permission.QUERY_ALL_PACKAGES"/>
+<uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+<uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM"/>
+<uses-permission android:name="android.permission.USE_EXACT_ALARM"/>
+<uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+<uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+<uses-permission android:name="android.permission.ACTIVITY_RECOGNITION"/>
+<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <application
         android:label="Immersive"
         android:icon="@mipmap/ic_launcher"
         android:supportsRtl="true"
-        android:usesCleartextTraffic="true" android:theme="@style/Theme.Immersive">
-        <activity
-            android:name=".MainActivity"
-            android:exported="true"
-            android:configChanges="orientation|screenSize|keyboardHidden">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <activity android:name=".NativePlayerActivity" android:configChanges="orientation|screenSize|keyboardHidden|screenLayout" />
-            <receiver android:name="com.ziyuan.Assistant.ScheduleReceiver" android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED"/>
-        <service android:name="com.ziyuan.Assistant.TapperService"
-            android:exported="false"
-            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
-            <intent-filter>
-                <action android:name="android.accessibilityservice.AccessibilityService"/>
-        <service android:name="com.ziyuan.Assistant.DownloadService" android:exported="false" android:foregroundServiceType="dataSync"/>
-        <service android:name="com.ziyuan.Assistant.DynaService" android:exported="false" android:foregroundServiceType="dataSync"/>
-        <activity android:name="com.ziyuan.Assistant.CalendarActivity" android:exported="false"/>
-        <activity android:name="com.ziyuan.Assistant.RecordActivity" android:exported="false"/>
-        <activity android:name="com.ziyuan.Assistant.VideoDlActivity" android:exported="false" android:configChanges="orientation|screenSize"/>
-        <activity android:name="com.ziyuan.Assistant.XhsActivity" android:exported="false" android:configChanges="orientation|screenSize"/>
-        <activity android:name="com.ziyuan.Assistant.XhsSettingsActivity" android:exported="false" android:windowSoftInputMode="adjustResize"/>
-        <activity android:name="com.ziyuan.Assistant.ShortcutActivity" android:exported="false"/>
-        <activity android:name="com.ziyuan.Assistant.MedPlanActivity" android:exported="false"/>
-        <activity android:name="com.ziyuan.Assistant.SpiderActivity" android:exported="false" android:configChanges="orientation|screenSize|keyboardHidden"/>
-        <activity android:name="com.ziyuan.Assistant.ChatActivity" android:exported="false" android:windowSoftInputMode="adjustResize"/>
-        <activity android:name="com.ziyuan.Assistant.TapperActivity" android:exported="false"/>
-        <activity android:name="com.ziyuan.Assistant.MetronomeActivity" android:exported="false"/>
-        <activity android:name="com.ziyuan.Assistant.H5ProjectListActivity" android:exported="false" android:windowSoftInputMode="adjustResize"/>
-        <activity android:name="com.ziyuan.Assistant.H5ProjectActivity" android:exported="false" android:windowSoftInputMode="adjustResize"/>
-        <activity android:name="com.ziyuan.Assistant.H5EditorActivity" android:exported="false" android:windowSoftInputMode="adjustResize" android:configChanges="orientation|screenSize|keyboardHidden"/>
-        <activity android:name="com.ziyuan.Assistant.MetroSettingsActivity" android:exported="false"/>
-        <service android:name="com.ziyuan.Assistant.MetronomeService" android:exported="false" android:foregroundServiceType="mediaPlayback"/>
-        <activity android:name="com.ziyuan.Assistant.PanViewerActivity" android:exported="false" android:configChanges="orientation|screenSize|keyboardHidden"/>
-        <activity android:name="com.ziyuan.Assistant.PanApiActivity" android:exported="false" android:windowSoftInputMode="adjustResize"/>
-        <activity android:name="com.ziyuan.Assistant.DynaActivity" android:exported="false" android:windowSoftInputMode="adjustResize"/>
-        <activity android:name="com.ziyuan.Assistant.EntertainmentActivity" android:exported="false"/>
-        <activity android:name="com.ziyuan.Assistant.AiChatActivity" android:exported="false" android:windowSoftInputMode="adjustResize"/>
-        <receiver android:name="com.ziyuan.Assistant.MedPlanActivity$MedPlanReceiver" android:exported="false"/>
-        <receiver android:name="com.ziyuan.Assistant.MedPlanActivity$MedConfirmReceiver" android:exported="false"/>
-        <activity android:name="com.ziyuan.Assistant.Web2ApkActivity" android:exported="false" android:configChanges="orientation|screenSize|keyboardHidden"/>
-        <activity android:name="com.ziyuan.Assistant.SettingsActivity" android:exported="false" android:windowSoftInputMode="adjustResize"/>
-        <activity android:name="com.ziyuan.Assistant.LoginWebActivity" android:exported="false" android:configChanges="orientation|screenSize|keyboardHidden" android:windowSoftInputMode="adjustResize"/>
-        <activity android:name="com.ziyuan.Assistant.ShortcutEditActivity" android:exported="false"/>
-        <activity android:name="com.ziyuan.Assistant.AppPickerActivity" android:exported="false"/>
-        <activity android:name="com.ziyuan.Assistant.ActivityListActivity" android:exported="false"/>
-        <activity android:name="com.ziyuan.Assistant.NativePlayerActivity"
-            android:exported="false"
-            android:configChanges="orientation|screenSize|screenLayout|keyboardHidden"/>
-        <activity android:name="com.ziyuan.Assistant.BiliLoginActivity" android:exported="false"/>
-        <activity android:name="com.ziyuan.Assistant.SniffActivity"
-            android:exported="true"
-            android:configChanges="orientation|screenSize|screenLayout|keyboardHidden">
-            <intent-filter android:label="@string/app_name">
-                <action android:name="android.intent.action.SEND"/>
-        <activity android:name="com.ziyuan.Assistant.HomeActivity"
-            android:exported="true"
-            android:windowSoftInputMode="adjustResize">
+        android:usesCleartextTraffic="true"
+        android:requestLegacyExternalStorage="true"
+        android:theme="@style/Theme.Immersive">
+        <activity android:name="com.ziyuan.immersive.MainActivity" android:exported="true" android:configChanges="orientation|screenSize|keyboardHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
-        <service android:name="com.ziyuan.Assistant.LanShareService" android:stopWithTask="true"/>
-        <service android:name="com.ziyuan.Assistant.MedWatchService" android:exported="false" android:foregroundServiceType="dataSync"/>
-        <service android:name="com.ziyuan.Assistant.DlKeepService" android:exported="false" android:stopWithTask="false"/>
-        <provider android:name="androidx.core.content.FileProvider" android:authorities="com.ziyuan.Assistant.fp" android:exported="false" android:grantUriPermissions="true">
-            <meta-data android:name="android.support.FILE_PROVIDER_PATHS" android:resource="@xml/provider_paths" />
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+        <activity android:name="com.ziyuan.immersive.NativePlayerActivity" android:configChanges="orientation|screenSize|keyboardHidden|screenLayout"/>
+<receiver android:name="com.ziyuan.Assistant.ScheduleReceiver" android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+            </intent-filter>
+        </receiver>
+<service android:name="com.ziyuan.Assistant.TapperService" android:exported="false" android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
+            <intent-filter>
+                <action android:name="android.accessibilityservice.AccessibilityService"/>
+            </intent-filter>
+            <meta-data android:name="android.accessibilityservice" android:resource="@xml/tapper_config"/>
+        </service>
+<service android:name="com.ziyuan.Assistant.DownloadService" android:exported="false" android:foregroundServiceType="dataSync"/>
+<service android:name="com.ziyuan.Assistant.DynaService" android:exported="false" android:foregroundServiceType="dataSync"/>
+<activity android:name="com.ziyuan.Assistant.CalendarActivity" android:exported="false"/>
+<activity android:name="com.ziyuan.Assistant.RecordActivity" android:exported="false"/>
+<activity android:name="com.ziyuan.Assistant.VideoDlActivity" android:exported="false" android:configChanges="orientation|screenSize"/>
+<activity android:name="com.ziyuan.Assistant.XhsActivity" android:exported="false" android:configChanges="orientation|screenSize"/>
+<activity android:name="com.ziyuan.Assistant.XhsSettingsActivity" android:exported="false" android:windowSoftInputMode="adjustResize"/>
+<activity android:name="com.ziyuan.Assistant.ShortcutActivity" android:exported="false"/>
+<activity android:name="com.ziyuan.Assistant.MedPlanActivity" android:exported="false"/>
+<activity android:name="com.ziyuan.Assistant.SpiderActivity" android:exported="false" android:configChanges="orientation|screenSize|keyboardHidden"/>
+<activity android:name="com.ziyuan.Assistant.ChatActivity" android:exported="false" android:windowSoftInputMode="adjustResize"/>
+<activity android:name="com.ziyuan.Assistant.TapperActivity" android:exported="false"/>
+<activity android:name="com.ziyuan.Assistant.MetronomeActivity" android:exported="false"/>
+<activity android:name="com.ziyuan.Assistant.H5ProjectListActivity" android:exported="false" android:windowSoftInputMode="adjustResize"/>
+<activity android:name="com.ziyuan.Assistant.H5ProjectActivity" android:exported="false" android:windowSoftInputMode="adjustResize"/>
+<activity android:name="com.ziyuan.Assistant.H5EditorActivity" android:exported="false" android:windowSoftInputMode="adjustResize" android:configChanges="orientation|screenSize|keyboardHidden"/>
+<activity android:name="com.ziyuan.Assistant.MetroSettingsActivity" android:exported="false"/>
+<service android:name="com.ziyuan.Assistant.MetronomeService" android:exported="false" android:foregroundServiceType="mediaPlayback"/>
+<activity android:name="com.ziyuan.Assistant.PanViewerActivity" android:exported="false" android:configChanges="orientation|screenSize|keyboardHidden"/>
+<activity android:name="com.ziyuan.Assistant.PanApiActivity" android:exported="false" android:windowSoftInputMode="adjustResize"/>
+<activity android:name="com.ziyuan.Assistant.DynaActivity" android:exported="false" android:windowSoftInputMode="adjustResize"/>
+<activity android:name="com.ziyuan.Assistant.EntertainmentActivity" android:exported="false"/>
+<activity android:name="com.ziyuan.Assistant.AiChatActivity" android:exported="false" android:windowSoftInputMode="adjustResize"/>
+<receiver android:name="com.ziyuan.Assistant.MedPlanActivity$MedPlanReceiver" android:exported="false"/>
+<receiver android:name="com.ziyuan.Assistant.MedPlanActivity$MedConfirmReceiver" android:exported="false"/>
+<activity android:name="com.ziyuan.Assistant.Web2ApkActivity" android:exported="false" android:configChanges="orientation|screenSize|keyboardHidden"/>
+<activity android:name="com.ziyuan.Assistant.SettingsActivity" android:exported="false" android:windowSoftInputMode="adjustResize"/>
+<activity android:name="com.ziyuan.Assistant.LoginWebActivity" android:exported="false" android:configChanges="orientation|screenSize|keyboardHidden" android:windowSoftInputMode="adjustResize"/>
+<activity android:name="com.ziyuan.Assistant.ShortcutEditActivity" android:exported="false"/>
+<activity android:name="com.ziyuan.Assistant.AppPickerActivity" android:exported="false"/>
+<activity android:name="com.ziyuan.Assistant.ActivityListActivity" android:exported="false"/>
+<activity android:name="com.ziyuan.Assistant.NativePlayerActivity" android:exported="false" android:configChanges="orientation|screenSize|screenLayout|keyboardHidden"/>
+<activity android:name="com.ziyuan.Assistant.BiliLoginActivity" android:exported="false"/>
+<activity android:name="com.ziyuan.Assistant.SniffActivity" android:exported="true" android:configChanges="orientation|screenSize|screenLayout|keyboardHidden">
+            <intent-filter android:label="@string/app_name">
+                <action android:name="android.intent.action.SEND"/>
+                <action android:name="android.intent.action.SEND_MULTIPLE"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <data android:mimeType="text/plain"/>
+            </intent-filter>
+        </activity>
+<activity android:name="com.ziyuan.Assistant.HomeActivity" android:exported="true" android:windowSoftInputMode="adjustResize">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+<service android:name="com.ziyuan.Assistant.LanShareService" android:stopWithTask="true"/>
+<service android:name="com.ziyuan.Assistant.MedWatchService" android:exported="false" android:foregroundServiceType="dataSync"/>
+<service android:name="com.ziyuan.Assistant.DlKeepService" android:exported="false" android:stopWithTask="false"/>
+<provider android:name="androidx.core.content.FileProvider" android:authorities="com.ziyuan.Assistant.fp" android:exported="false" android:grantUriPermissions="true">
+            <meta-data android:name="android.support.FILE_PROVIDER_PATHS" android:resource="@xml/provider_paths"/>
+        </provider>
     </application>
 </manifest>

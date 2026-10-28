@@ -15,7 +15,8 @@ jobs:
       - name: Build release APK
         run: |
           chmod +x gradlew
-          ./gradlew --no-daemon assembleRelease
+          # 加了 --stacktrace，下次失败会在日志里打印完整报错链，方便定位“包名冲突”的确切位置
+          ./gradlew --no-daemon assembleRelease --stacktrace
       - uses: actions/upload-artifact@v4
         with:
           name: Immersive-v1.39-vc${{ github.run_number }}

@@ -26,13 +26,13 @@
         android:usesCleartextTraffic="true"
         android:requestLegacyExternalStorage="true"
         android:theme="@style/Theme.Immersive">
-        <activity android:name="com.ziyuan.immersive.MainActivity" android:exported="true" android:configChanges="orientation|screenSize|keyboardHidden">
+        <activity android:name="com.ziyuan.Assistant.MainActivity" android:exported="true" android:configChanges="orientation|screenSize|keyboardHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name="com.ziyuan.immersive.NativePlayerActivity" android:configChanges="orientation|screenSize|keyboardHidden|screenLayout"/>
+        <activity android:name="com.ziyuan.Assistant.NativePlayerActivity" android:configChanges="orientation|screenSize|keyboardHidden|screenLayout"/>
 <receiver android:name="com.ziyuan.Assistant.ScheduleReceiver" android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>

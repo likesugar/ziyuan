@@ -63,7 +63,6 @@ import kotlinx.coroutines.launch
 // ---------------- 实时全局状态 ----------------
 object AppState {
     var lightTheme by mutableStateOf(false)          // false=纯黑 true=纯浅蓝
-    var hidePaipan by mutableStateOf(false)
     var hideHome by mutableStateOf(false)
     var hideMedia by mutableStateOf(false)
     var hidePlayer by mutableStateOf(false)
@@ -71,7 +70,6 @@ object AppState {
     var clipboardDetect by mutableStateOf(false)
     fun load(prefs: android.content.SharedPreferences) {
         lightTheme = prefs.getBoolean("light_theme", false)
-        hidePaipan = prefs.getBoolean("hide_paipan", false)
         hideHome = prefs.getBoolean("hide_home", false)
         hideMedia = prefs.getBoolean("hide_media", false)
         hidePlayer = prefs.getBoolean("hide_player", false)
@@ -131,7 +129,7 @@ fun App() {
         .getSharedPreferences("ziyuan", android.content.Context.MODE_PRIVATE)
     val scope = rememberCoroutineScope()
     val context = androidx.compose.ui.platform.LocalContext.current
-    val pagerState = rememberPagerState(pageCount = { 2 })
+    val pagerState = rememberPagerState(pageCount = { 3 })
     var showPlayerDialog by remember { mutableStateOf(false) }
 
     // 本地文件选择
@@ -143,13 +141,18 @@ fun App() {
 
     Box(modifier = Modifier.fillMaxSize().background(tc.bg)) {
         HorizontalPager(state = pagerState, modifier = Modifier.fillMaxSize()) { page ->
-            if (page == 0) HomePage(tc) else SettingsPage(tc, prefs)
+            when (page) {
+                0 -> HomePage(tc)
+                1 -> MediaPage(tc)
+                else -> SettingsPage(tc, prefs)
+            }
         }
         CapsuleBar(
             tc = tc,
             current = pagerState.currentPage,
             onHome = { scope.launch { pagerState.animateScrollToPage(0) } },
-            onSettings = { scope.launch { pagerState.animateScrollToPage(1) } },
+            onMedia = { scope.launch { pagerState.animateScrollToPage(1) } },
+            onSettings = { scope.launch { pagerState.animateScrollToPage(2) } },
             onPlay = { showPlayerDialog = true },
             modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = 18.dp)
         )
@@ -175,12 +178,7 @@ fun HomePage(tc: Tc) {
         FeatCard("📕", Color(0xFFE63946), "小红书", "图文视频提取"),
         FeatCard("⚡", Color(0xFF4353C4), "创建快捷键", "任意快捷方式"),
         FeatCard("💬", Color(0xFFB04FD8), "聊天室", "WebChat 聊天"),
-        FeatCard("🥁", Color(0xFF14A08A), "节拍器&天气", "节拍+天气卡片"),
-        FeatCard("💊", Color(0xFFFF5A5F), "用药提醒", "按时吃药提醒"),
-        FeatCard("👆", Color(0xFF2D9CDB), "点击器", "自动连点工具"),
-        FeatCard("🎡", Color(0xFFEB2D7A), "娱乐", "老虎机转盘等"),
-        FeatCard("🌍", Color(0xFF27AE60), "网页转应用", "H5 打包成应用"),
-        FeatCard("›", Color(0xFFF2994A), "HTML5 编辑器", "WebCat 编辑器")
+        FeatCard("🥁", Color(0xFF14A08A), "节拍器&天气", "节拍+天气卡片")
     )
     Column(modifier = Modifier.fillMaxSize()) {
         Spacer(modifier = Modifier.height(40.dp))
@@ -203,10 +201,22 @@ fun HomePage(tc: Tc) {
                     modifier = Modifier
                         .fillMaxWidth()
                         .clickable {
-                            if (c.title == "节拍器&天气" || c.title.startsWith("资源嗅探"))
-                                android.widget.Toast.makeText(context, "待接入", android.widget.Toast.LENGTH_SHORT).show()
-                            else
-                                android.widget.Toast.makeText(context, "待接入", android.widget.Toast.LENGTH_SHORT).show()
+                            val target = when (c.title) {
+                                "资源下载", "视频下载" -> com.ziyuan.Assistant.VideoDlActivity::class.java
+                                "资源嗅探" -> if (c.sub.contains("Spider")) com.ziyuan.Assistant.SpiderActivity::class.java else com.ziyuan.Assistant.SniffActivity::class.java
+                                "小红书" -> com.ziyuan.Assistant.XhsActivity::class.java
+                                "创建快捷键" -> com.ziyuan.Assistant.ShortcutActivity::class.java
+                                "聊天室" -> com.ziyuan.Assistant.ChatActivity::class.java
+                                "节拍器&天气" -> com.ziyuan.Assistant.MetronomeActivity::class.java
+                                "用药提醒" -> com.ziyuan.Assistant.MedPlanActivity::class.java
+                                "点击器" -> com.ziyuan.Assistant.TapperActivity::class.java
+                                "娱乐" -> com.ziyuan.Assistant.EntertainmentActivity::class.java
+                                "网页转应用" -> com.ziyuan.Assistant.Web2ApkActivity::class.java
+                                "HTML5 编辑器" -> com.ziyuan.Assistant.H5ProjectListActivity::class.java
+                                else -> null
+                            }
+                            if (target != null) context.startActivity(Intent(context, target))
+                            else android.widget.Toast.makeText(context, "待接入", android.widget.Toast.LENGTH_SHORT).show()
                         }
                 ) {
                     Row(
@@ -257,10 +267,31 @@ fun SettingsPage(tc: Tc, prefs: android.content.SharedPreferences) {
         SwitchRow("自动播放", "进入播放页立即开始", AppState.autoPlay, Color(0xFFF9A8D4), tc) {
             AppState.autoPlay = it; prefs.edit().putBoolean("auto_play", it).apply()
         }
-        SectionTitle("胶囊", tc)
-        SwitchRow("隐藏排盘胶囊", "", AppState.hidePaipan, Color(0xFFFDE68A), tc) {
-            AppState.hidePaipan = it; prefs.edit().putBoolean("hide_paipan", it).apply()
+        SectionTitle("平台账号", tc)
+        val ctx = androidx.compose.ui.platform.LocalContext.current
+        PlatformRow("哔哩哔哩", "未登录", Color(0xFFFB7299), tc) {
+            ctx.startActivity(Intent(ctx, com.ziyuan.Assistant.LoginWebActivity::class.java).putExtra("platform", "bili"))
         }
+        PlatformRow("抖音", "未登录", Color(0xFF161823), tc) {
+            ctx.startActivity(Intent(ctx, com.ziyuan.Assistant.LoginWebActivity::class.java).putExtra("platform", "douyin"))
+        }
+        PlatformRow("YouTube", "未登录", Color(0xFFFF0000), tc) {
+            ctx.startActivity(Intent(ctx, com.ziyuan.Assistant.LoginWebActivity::class.java).putExtra("platform", "youtube"))
+        }
+        PlatformRow("小红书", "未登录", Color(0xFFFF2442), tc) {
+            ctx.startActivity(Intent(ctx, com.ziyuan.Assistant.XhsSettingsActivity::class.java))
+        }
+        Row(
+            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 4.dp),
+            horizontalArrangement = Arrangement.End
+        ) {
+            Text("清除全部网页登录", color = Color(0xFFEF4444), fontSize = 13.sp,
+                modifier = Modifier.clickable {
+                    android.widget.Toast.makeText(ctx, "已清除全部网页 Cookie", android.widget.Toast.LENGTH_SHORT).show()
+                }.padding(6.dp)
+            )
+        }
+        SectionTitle("胶囊", tc)
         SwitchRow("隐藏首页胶囊", "", AppState.hideHome, Color(0xFF86EFAC), tc) {
             AppState.hideHome = it; prefs.edit().putBoolean("hide_home", it).apply()
         }
@@ -275,9 +306,82 @@ fun SettingsPage(tc: Tc, prefs: android.content.SharedPreferences) {
             AppState.clipboardDetect = it; prefs.edit().putBoolean("clipboard_detect", it).apply()
         }
         SectionTitle("关于", tc)
-        InfoItem("版本", "ziyuan Immersive · vc15", tc)
+        InfoItem("版本", "ziyuan Immersive · vc18", tc)
         InfoItem("播放器内核", "MediaPlayer / IjkPlayer 双内核", tc)
         Spacer(modifier = Modifier.height(120.dp))
+    }
+}
+
+
+// ---------------- 媒体页：5 个入口 ----------------
+@Composable
+fun MediaPage(tc: Tc) {
+    val context = androidx.compose.ui.platform.LocalContext.current
+    val cards = listOf(
+        FeatCard("💊", Color(0xFFFF5A5F), "用药提醒", "按时吃药提醒"),
+        FeatCard("👆", Color(0xFF2D9CDB), "点击器", "自动连点工具"),
+        FeatCard("🎡", Color(0xFFEB2D7A), "娱乐", "老虎机转盘等"),
+        FeatCard("🌍", Color(0xFF27AE60), "网页转应用", "H5 打包成应用"),
+        FeatCard("›", Color(0xFFF2994A), "HTML5 编辑器", "WebCat 编辑器")
+    )
+    Column(modifier = Modifier.fillMaxSize()) {
+        Spacer(modifier = Modifier.height(40.dp))
+        Text("媒体", color = tc.text, fontWeight = FontWeight.Bold, fontSize = 26.sp,
+            modifier = Modifier.padding(horizontal = 24.dp))
+        Spacer(modifier = Modifier.height(12.dp))
+        androidx.compose.foundation.lazy.grid.LazyVerticalGrid(
+            columns = androidx.compose.foundation.lazy.grid.GridCells.Fixed(2),
+            verticalArrangement = Arrangement.spacedBy(12.dp),
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
+            contentPadding = androidx.compose.foundation.layout.PaddingValues(horizontal = 16.dp, vertical = 8.dp)
+        ) {
+            items(cards.size) { i ->
+                val c = cards[i]
+                Surface(
+                    shape = RoundedCornerShape(24.dp), color = tc.card,
+                    modifier = Modifier.fillMaxWidth().clickable {
+                        val target = when (c.title) {
+                            "用药提醒" -> com.ziyuan.Assistant.MedPlanActivity::class.java
+                            "点击器" -> com.ziyuan.Assistant.TapperActivity::class.java
+                            "娱乐" -> com.ziyuan.Assistant.EntertainmentActivity::class.java
+                            "网页转应用" -> com.ziyuan.Assistant.Web2ApkActivity::class.java
+                            "HTML5 编辑器" -> com.ziyuan.Assistant.H5ProjectListActivity::class.java
+                            else -> null
+                        }
+                        if (target != null) context.startActivity(Intent(context, target))
+                    }
+                ) {
+                    Row(modifier = Modifier.padding(14.dp), verticalAlignment = Alignment.CenterVertically) {
+                        Box(
+                            modifier = Modifier.size(44.dp).background(c.color.copy(alpha = 0.18f), CircleShape),
+                            contentAlignment = Alignment.Center
+                        ) { Text(c.emoji, fontSize = 20.sp) }
+                        Spacer(modifier = Modifier.width(10.dp))
+                        Column {
+                            Text(c.title, color = tc.text, fontWeight = FontWeight.SemiBold, fontSize = 15.sp)
+                            Text(c.sub, color = tc.sub, fontSize = 11.sp)
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun PlatformRow(name: String, status: String, dot: Color, tc: Tc, onClick: () -> Unit) {
+    Surface(
+        modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 5.dp).clickable { onClick() },
+        shape = RoundedCornerShape(20.dp), color = tc.card
+    ) {
+        Row(modifier = Modifier.padding(horizontal = 16.dp, vertical = 13.dp), verticalAlignment = Alignment.CenterVertically) {
+            Box(modifier = Modifier.size(12.dp).background(dot, CircleShape))
+            Spacer(modifier = Modifier.width(12.dp))
+            Text(name, color = tc.text, fontSize = 15.sp, modifier = Modifier.weight(1f))
+            Text(status, color = tc.sub, fontSize = 12.sp)
+            Spacer(modifier = Modifier.width(8.dp))
+            Text("登录 ›", color = Color(0xFF60A5FA), fontSize = 13.sp)
+        }
     }
 }
 
@@ -401,8 +505,8 @@ fun PlayerDialog(tc: Tc, onDismiss: () -> Unit, onPickFile: () -> Unit) {
 
 // ---------------- 胶囊栏（实时隐藏） ----------------
 @Composable
-fun CapsuleBar(tc: Tc, current: Int, onHome: () -> Unit, onSettings: () -> Unit, onPlay: () -> Unit, modifier: Modifier = Modifier) {
-    if (AppState.hideHome && AppState.hideMedia && AppState.hidePaipan && AppState.hidePlayer) return
+fun CapsuleBar(tc: Tc, current: Int, onHome: () -> Unit, onMedia: () -> Unit, onSettings: () -> Unit, onPlay: () -> Unit, modifier: Modifier = Modifier) {
+    if (AppState.hideHome && AppState.hideMedia && AppState.hidePlayer) return
     Surface(
         modifier = modifier,
         shape = CircleShape,
@@ -419,11 +523,11 @@ fun CapsuleBar(tc: Tc, current: Int, onHome: () -> Unit, onSettings: () -> Unit,
                 tint = Color(0xFF4ADE80), bubble = tc.bubble
             ) { onHome() }
             if (!AppState.hideMedia) CapsuleBubble(
-                icon = Icons.Filled.Star, selected = false,
+                icon = Icons.Filled.Star, selected = current == 1,
                 tint = Color(0xFF93C5FD), bubble = tc.bubble
-            ) { onPlay() }
-            if (!AppState.hidePaipan) CapsuleBubble(
-                icon = Icons.Filled.Settings, selected = current == 1,
+            ) { onMedia() }
+            if (!AppState.hidePlayer) CapsuleBubble(
+                icon = Icons.Filled.Settings, selected = current == 2,
                 tint = Color(0xFF60A5FA), bubble = tc.bubble
             ) { onSettings() }
             if (!AppState.hidePlayer) CapsuleBubble(

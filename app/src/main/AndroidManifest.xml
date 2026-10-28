@@ -81,12 +81,7 @@
                 <data android:mimeType="text/plain"/>
             </intent-filter>
         </activity>
-<activity android:name="com.ziyuan.Assistant.HomeActivity" android:exported="true" android:windowSoftInputMode="adjustResize">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
-        </activity>
+<activity android:name="com.ziyuan.Assistant.HomeActivity" android:exported="true" android:windowSoftInputMode="adjustResize"/>
 <service android:name="com.ziyuan.Assistant.LanShareService" android:stopWithTask="true"/>
 <service android:name="com.ziyuan.Assistant.MedWatchService" android:exported="false" android:foregroundServiceType="dataSync"/>
 <service android:name="com.ziyuan.Assistant.DlKeepService" android:exported="false" android:stopWithTask="false"/>

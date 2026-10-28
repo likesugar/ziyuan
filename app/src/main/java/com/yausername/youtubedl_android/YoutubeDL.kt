@@ -1,6 +1,7 @@
 package com.yausername.youtubedl_android
 
 import android.content.Context
+import com.ziyuan.immersive.R
 import android.os.Build
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.yausername.youtubedl_android.mapper.VideoInfo
@@ -271,11 +272,11 @@ object YoutubeDL {
     }
 
     fun version(appContext: Context?): String? {
-        return SharedPrefsHelper[appContext, pythonLibVersion]
+        return appContext?.let { SharedPrefsHelper[it, pythonLibVersion] }
     }
 
     fun versionName(appContext: Context?): String? {
-        return SharedPrefsHelper[appContext, pythonLibVersion]
+        return appContext?.let { SharedPrefsHelper[it, pythonLibVersion] }
     }
 
     enum class UpdateStatus {

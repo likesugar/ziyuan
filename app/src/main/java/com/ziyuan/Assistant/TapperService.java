@@ -1,6 +1,6 @@
 package com.ziyuan.Assistant;
 
-import com.ziyuan.immersive.R;
+import com.ziyuan.Assistant.R;
 import android.accessibilityservice.AccessibilityService;
 import android.accessibilityservice.GestureDescription;
 import android.graphics.Canvas;

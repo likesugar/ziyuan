@@ -16,47 +16,56 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Switch
+import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
-import androidx.compose.material3.IconButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
+import kotlinx.coroutines.launch
+
+val MintGreen = Color(0xFF5EEAD4)
+val SoftBlue = Color(0xFF93C5FD)
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // 沉浸式：内容延伸到系统栏后面，并隐藏状态栏 + 导航栏
         WindowCompat.setDecorFitsSystemWindows(window, false)
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
-        // 挖孔屏：内容延伸到挖孔区
         val lp = window.attributes
         lp.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
         window.attributes = lp
-        val controller = WindowInsetsControllerCompat(window, window.decorView)
-        controller.hide(WindowInsetsCompat.Type.systemBars())
-        controller.systemBarsBehavior =
-            WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
-        setContent { ImmersiveScreen() }
+        hideSystemBars()
+        setContent { ImmersiveApp() }
     }
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
@@ -70,7 +79,6 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun hideSystemBars() {
-        WindowCompat.setDecorFitsSystemWindows(window, false)
         val controller = WindowInsetsControllerCompat(window, window.decorView)
         controller.hide(WindowInsetsCompat.Type.systemBars())
         controller.systemBarsBehavior =
@@ -79,7 +87,11 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun ImmersiveScreen() {
+fun ImmersiveApp() {
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
+    val pagerState = rememberPagerState(pageCount = { 2 })
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -89,39 +101,76 @@ fun ImmersiveScreen() {
                 )
             )
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-        ) {
-            Spacer(modifier = Modifier.height(34.dp)) // 顶到挖孔区，手动留出顶部安全距离
-            // 左右卡片
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 12.dp),
-                horizontalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                InfoCard(
-                    title = "左侧卡片",
-                    body = "这是左边的卡片内容，展示沉浸式布局。",
-                    accent = Color(0xFF4ADE80),
-                    modifier = Modifier.weight(1f)
+        HorizontalPager(
+            state = pagerState,
+            modifier = Modifier.fillMaxSize()
+        ) { page ->
+            when (page) {
+                0 -> HomePage(
+                    onPlay = {
+                        context.startActivity(
+                            android.content.Intent(context, NativePlayerActivity::class.java)
+                                .putExtra("url", "https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel.ism/.m3u8")
+                                .putExtra("title", "胶囊播放")
+                        )
+                    }
                 )
-                InfoCard(
-                    title = "右侧卡片",
-                    body = "这是右边的卡片内容，与左侧等宽对称。",
-                    accent = Color(0xFF60A5FA),
-                    modifier = Modifier.weight(1f)
-                )
+                1 -> SettingsPage()
             }
-            Spacer(modifier = Modifier.weight(1f))
-            // 胶囊低栏
-            CapsuleBar(
-                modifier = Modifier
-                    .align(Alignment.CenterHorizontally)
-                    .padding(bottom = 20.dp)
+        }
+        // 悬浮胶囊栏（两页共用，圆润可爱版）
+        CapsuleBar(
+            current = pagerState.currentPage,
+            onHome = { scope.launch { pagerState.animateScrollToPage(0) } },
+            onSettings = { scope.launch { pagerState.animateScrollToPage(1) } },
+            onPlay = {
+                context.startActivity(
+                    android.content.Intent(context, NativePlayerActivity::class.java)
+                        .putExtra("url", "https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel.ism/.m3u8")
+                        .putExtra("title", "胶囊播放")
+                )
+            },
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .padding(bottom = 26.dp)
+        )
+    }
+}
+
+// ---------------- 首页 ----------------
+@Composable
+fun HomePage(onPlay: () -> Unit) {
+    Column(
+        modifier = Modifier.fillMaxSize()
+    ) {
+        Spacer(modifier = Modifier.height(34.dp))
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 12.dp),
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            InfoCard(
+                title = "左侧卡片",
+                body = "这是左边的卡片内容，展示沉浸式布局。",
+                accent = MintGreen,
+                modifier = Modifier.weight(1f)
+            )
+            InfoCard(
+                title = "右侧卡片",
+                body = "这是右边的卡片内容，与左侧等宽对称。",
+                accent = SoftBlue,
+                modifier = Modifier.weight(1f)
             )
         }
+        Spacer(modifier = Modifier.height(90.dp))
+        Text(
+            "左右滑动切换 设置页 ⇄ 首页",
+            color = Color.White.copy(alpha = 0.35f),
+            fontSize = 12.sp,
+            modifier = Modifier.align(Alignment.CenterHorizontally)
+        )
+        Spacer(modifier = Modifier.weight(1f))
     }
 }
 
@@ -129,17 +178,17 @@ fun ImmersiveScreen() {
 fun InfoCard(title: String, body: String, accent: Color, modifier: Modifier = Modifier) {
     Surface(
         modifier = modifier,
-        shape = RoundedCornerShape(18.dp),
+        shape = RoundedCornerShape(24.dp),
         color = Color.White.copy(alpha = 0.06f),
         contentColor = Color.White
     ) {
-        Column(modifier = Modifier.padding(16.dp)) {
+        Column(modifier = Modifier.padding(18.dp)) {
             Box(
                 modifier = Modifier
-                    .size(8.dp)
+                    .size(10.dp)
                     .background(accent, CircleShape)
             )
-            Spacer(modifier = Modifier.height(10.dp))
+            Spacer(modifier = Modifier.height(12.dp))
             Text(title, fontWeight = FontWeight.Bold, fontSize = 17.sp)
             Spacer(modifier = Modifier.height(6.dp))
             Text(body, fontSize = 13.sp, color = Color.White.copy(alpha = 0.7f), lineHeight = 19.sp)
@@ -147,49 +196,155 @@ fun InfoCard(title: String, body: String, accent: Color, modifier: Modifier = Mo
     }
 }
 
+// ---------------- 设置页 ----------------
 @Composable
-fun CapsuleBar(modifier: Modifier = Modifier) {
-    val context = androidx.compose.ui.platform.LocalContext.current
+fun SettingsPage() {
+    var immersive by remember { mutableStateOf(true) }
+    var keepOn by remember { mutableStateOf(true) }
+    var autoPlay by remember { mutableStateOf(false) }
+    var darkCapsule by remember { mutableStateOf(true) }
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState())
+    ) {
+        Spacer(modifier = Modifier.height(44.dp))
+        Text(
+            "设置",
+            color = Color.White,
+            fontWeight = FontWeight.Bold,
+            fontSize = 26.sp,
+            modifier = Modifier.padding(horizontal = 24.dp)
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        SettingSwitch("沉浸式状态栏", "隐藏状态栏与导航栏", immersive, MintGreen) { immersive = it }
+        SettingSwitch("保持亮屏", "播放时不自动锁屏", keepOn, SoftBlue) { keepOn = it }
+        SettingSwitch("自动播放", "进入播放页立即开始", autoPlay, Color(0xFFF9A8D4)) { autoPlay = it }
+        SettingSwitch("胶囊悬浮栏", "在底部显示胶囊栏", darkCapsule, Color(0xFFFDE68A)) { darkCapsule = it }
+        SettingItem("关于", "ziyuan Immersive · vc5", MintGreen)
+        SettingItem("播放器内核", "MediaPlayer / IjkPlayer 双内核", SoftBlue)
+        Spacer(modifier = Modifier.height(120.dp))
+    }
+}
+
+@Composable
+fun SettingSwitch(title: String, sub: String, checked: Boolean, accent: Color, onChange: (Boolean) -> Unit) {
     Surface(
-        modifier = modifier,
-        shape = RoundedCornerShape(percent = 50),
-        color = Color.White.copy(alpha = 0.08f),
-        contentColor = Color.White
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 6.dp),
+        shape = RoundedCornerShape(24.dp),
+        color = Color.White.copy(alpha = 0.06f)
     ) {
         Row(
-            modifier = Modifier.padding(horizontal = 22.dp, vertical = 10.dp),
-            horizontalArrangement = Arrangement.spacedBy(26.dp),
+            modifier = Modifier.padding(horizontal = 18.dp, vertical = 14.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            CapsuleIcon(Icons.Filled.Home)
-            CapsuleIcon(Icons.Filled.Settings)
-            CapsuleIcon(Icons.Filled.PlayArrow, highlight = true) {
-                context.startActivity(
-                    android.content.Intent(context, NativePlayerActivity::class.java)
-                        .putExtra("url", "https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel.ism/.m3u8")
-                        .putExtra("title", "胶囊播放")
-                )
+            Box(
+                modifier = Modifier
+                    .size(12.dp)
+                    .background(accent, CircleShape)
+            )
+            Spacer(modifier = Modifier.width(12.dp))
+            Column(modifier = Modifier.weight(1f)) {
+                Text(title, color = Color.White, fontSize = 15.sp, fontWeight = FontWeight.Medium)
+                Text(sub, color = Color.White.copy(alpha = 0.5f), fontSize = 12.sp)
             }
+            Switch(
+                checked = checked,
+                onCheckedChange = onChange,
+                colors = SwitchDefaults.colors(
+                    checkedTrackColor = accent,
+                    uncheckedTrackColor = Color.White.copy(alpha = 0.15f)
+                )
+            )
         }
     }
 }
 
 @Composable
-fun CapsuleIcon(icon: ImageVector, highlight: Boolean = false, onClick: () -> Unit = {}) {
-    val tint = if (highlight) Color(0xFF4ADE80) else Color.White.copy(alpha = 0.85f)
-    val context = androidx.compose.ui.platform.LocalContext.current
-    Box(
+fun SettingItem(title: String, sub: String, accent: Color) {
+    Surface(
         modifier = Modifier
-            .size(40.dp)
-            .clickable { onClick() },
-        contentAlignment = Alignment.Center
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 6.dp),
+        shape = RoundedCornerShape(24.dp),
+        color = Color.White.copy(alpha = 0.06f)
     ) {
-        Icon(icon, contentDescription = null, tint = tint)
+        Row(
+            modifier = Modifier.padding(horizontal = 18.dp, vertical = 14.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Box(
+                modifier = Modifier
+                    .size(12.dp)
+                    .background(accent, CircleShape)
+            )
+            Spacer(modifier = Modifier.width(12.dp))
+            Column(modifier = Modifier.weight(1f)) {
+                Text(title, color = Color.White, fontSize = 15.sp, fontWeight = FontWeight.Medium)
+                Text(sub, color = Color.White.copy(alpha = 0.5f), fontSize = 12.sp)
+            }
+        }
     }
 }
 
-@Preview(showBackground = true)
+// ---------------- 可爱圆润胶囊栏 ----------------
 @Composable
-fun PreviewImmersive() {
-    ImmersiveScreen()
+fun CapsuleBar(
+    current: Int,
+    onHome: () -> Unit,
+    onSettings: () -> Unit,
+    onPlay: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Surface(
+        modifier = modifier.shadow(16.dp, CircleShape),
+        shape = CircleShape,
+        color = Color.White.copy(alpha = 0.10f)
+    ) {
+        Row(
+            modifier = Modifier.padding(horizontal = 10.dp, vertical = 8.dp),
+            horizontalArrangement = Arrangement.spacedBy(10.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            CapsuleBubble(
+                icon = Icons.Filled.Home,
+                selected = current == 0,
+                tint = MintGreen,
+                onClick = onHome
+            )
+            CapsuleBubble(
+                icon = Icons.Filled.PlayArrow,
+                selected = false,
+                tint = Color(0xFFF9A8D4),
+                onClick = onPlay
+            )
+            CapsuleBubble(
+                icon = Icons.Filled.Settings,
+                selected = current == 1,
+                tint = SoftBlue,
+                onClick = onSettings
+            )
+        }
+    }
 }
+
+@Composable
+fun CapsuleBubble(icon: ImageVector, selected: Boolean, tint: Color, onClick: () -> Unit) {
+    Box(
+        modifier = Modifier
+            .size(46.dp)
+            .background(
+                if (selected) tint.copy(alpha = 0.25f) else Color.Transparent,
+                CircleShape
+            )
+            .clickable { onClick() },
+        contentAlignment = Alignment.Center
+    ) {
+        Icon(icon, contentDescription = null, tint = if (selected) tint else Color.White.copy(alpha = 0.75f))
+    }
+}
+
+@Composable

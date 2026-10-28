@@ -1,13 +1,13 @@
-plugins { id("com.android.application"); id("org.jetbrains.kotlin.android") }
+plugins { id("com.android.application"); id("org.jetbrains.kotlin.android"); id("org.jetbrains.kotlin.plugin.compose") }
 android {
     namespace = "com.ziyuan.immersive"
-    compileSdk = 34
+    compileSdk = 35
     defaultConfig {
         applicationId = "com.ziyuan.immersive"
         minSdk = 24
-        targetSdk = 34
-        versionCode = 23
-        versionName = "1.23"
+        targetSdk = 35
+        versionCode = 24
+        versionName = "1.24"
     }
     signingConfigs {
         create("release") {
@@ -26,7 +26,6 @@ android {
     compileOptions { sourceCompatibility = JavaVersion.VERSION_17; targetCompatibility = JavaVersion.VERSION_17 }
     kotlinOptions { jvmTarget = "17" }
     buildFeatures { compose = true }
-    composeOptions { kotlinCompilerExtensionVersion = "1.5.8" }
     packaging { resources.excludes += "/META-INF/{AL2.0,LGPL2.1}" }
 }
 dependencies {

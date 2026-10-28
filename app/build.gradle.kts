@@ -46,6 +46,5 @@ dependencies {
     implementation("com.fasterxml.jackson.core:jackson-databind:2.15.3")
     implementation("commons-io:commons-io:2.11.0")
     implementation(files("libs/apksig.jar"))
-    implementation("org.apache.commons:commons-compress:1.26.0")
     implementation(files("libs/pinyin4j-2.5.0.jar"))
 }

@@ -1,7 +1,7 @@
 package com.yausername.youtubedl_android
 
 import android.content.Context
-import com.ziyuan.immersive.R
+import com.ziyuan.Assistant.R
 import android.os.Build
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.yausername.youtubedl_android.mapper.VideoInfo

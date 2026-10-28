@@ -98,7 +98,8 @@ public class NativePlayerActivity extends Activity {
         }
         applyKernel();
         videoView.setUrl(url, douyinHeaders());
-        videoView.start();
+        boolean autoPlay = getSharedPreferences("ziyuan", MODE_PRIVATE).getBoolean("auto_play", true);
+        if (autoPlay) videoView.start(); else videoView.pause();
 
     }
 

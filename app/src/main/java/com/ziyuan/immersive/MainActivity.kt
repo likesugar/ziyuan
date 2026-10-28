@@ -199,10 +199,9 @@ fun InfoCard(title: String, body: String, accent: Color, modifier: Modifier = Mo
 // ---------------- 设置页 ----------------
 @Composable
 fun SettingsPage() {
-    var immersive by remember { mutableStateOf(true) }
-    var keepOn by remember { mutableStateOf(true) }
-    var autoPlay by remember { mutableStateOf(false) }
-    var darkCapsule by remember { mutableStateOf(true) }
+    val context = androidx.compose.ui.platform.LocalContext.current
+    val prefs = context.getSharedPreferences("ziyuan", android.content.Context.MODE_PRIVATE)
+    var autoPlay by remember { mutableStateOf(prefs.getBoolean("auto_play", true)) }
 
     Column(
         modifier = Modifier
@@ -218,12 +217,11 @@ fun SettingsPage() {
             modifier = Modifier.padding(horizontal = 24.dp)
         )
         Spacer(modifier = Modifier.height(8.dp))
-        SettingSwitch("沉浸式状态栏", "隐藏状态栏与导航栏", immersive, MintGreen) { immersive = it }
-        SettingSwitch("保持亮屏", "播放时不自动锁屏", keepOn, SoftBlue) { keepOn = it }
-        SettingSwitch("自动播放", "进入播放页立即开始", autoPlay, Color(0xFFF9A8D4)) { autoPlay = it }
-        SettingSwitch("胶囊悬浮栏", "在底部显示胶囊栏", darkCapsule, Color(0xFFFDE68A)) { darkCapsule = it }
-        SettingItem("关于", "ziyuan Immersive · vc5", MintGreen)
-        SettingItem("播放器内核", "MediaPlayer / IjkPlayer 双内核", SoftBlue)
+        SettingSwitch("自动播放", "进入播放页立即开始", autoPlay, Color(0xFFF9A8D4)) {
+            autoPlay = it
+            prefs.edit().putBoolean("auto_play", it).apply()
+        }
+        SettingItem("关于", "ziyuan Immersive · vc11", MintGreen)
         Spacer(modifier = Modifier.height(120.dp))
     }
 }

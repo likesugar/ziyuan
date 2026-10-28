@@ -6,7 +6,7 @@ android {
         applicationId = "com.ziyuan.immersive"
         minSdk = 24
         targetSdk = 34
-        versionCode = 10
+        versionCode = 11
         versionName = "1.0"
     }
     signingConfigs {

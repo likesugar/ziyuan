@@ -1,6 +1,6 @@
 package com.ziyuan.Assistant;
 
-import com.ziyuan.immersive.R;
+import com.ziyuan.Assistant.R;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
